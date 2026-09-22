@@ -12,9 +12,12 @@ export interface Template {
 /**
  * Senior DevOps / Cloud / Site Reliability Engineer.
  *
- * Written to demonstrate what scores well: every bullet opens with an achievement verb,
- * most carry a metric with a before/after, and the skills are grouped the way recruiters
- * search for them. Replace the content, keep the shape.
+ * Contact details and education are real. Everything below them — summary, roles,
+ * companies, metrics and the project — is still illustrative demo content kept to show
+ * what scores well: every bullet opens with an achievement verb, most carry a metric with
+ * a before/after, and the skills are grouped the way recruiters search.
+ *
+ * REPLACE THE SUMMARY, EXPERIENCE AND PROJECT before sending this to anyone.
  */
 const SRE: Template = {
   id: 'sre',
@@ -23,13 +26,13 @@ const SRE: Template = {
   resume: {
     targetRole: 'Senior Site Reliability Engineer',
     contact: {
-      fullName: 'Arjun Mehta',
+      fullName: 'Amrit Pal Singh',
       headline: 'Senior DevOps / Site Reliability Engineer',
-      email: 'arjun.mehta@email.com',
-      phone: '+44 7700 900456',
-      location: 'London, United Kingdom',
-      linkedin: 'linkedin.com/in/arjunmehta',
-      website: 'github.com/arjunmehta',
+      email: 'amritmatti007@gmail.com',
+      phone: '+(91)94176-23163',
+      location: 'Mohali, Punjab',
+      linkedin: 'linkedin.com/in/amritpalsingh040497',
+      website: 'github.com/amritmatti',
     },
     summary:
       'Senior DevOps and Site Reliability Engineer with 9 years running production platforms on AWS and Kubernetes for fintech and logistics. Owns infrastructure serving 140 services and 4M daily users; cut P1 incidents 62% and cloud spend 31% while raising deployment frequency from weekly to 40 times a day. Deep in Terraform, Kubernetes, Go and observability, with a track record of leading incident response and mentoring platform teams.',
@@ -82,13 +85,13 @@ const SRE: Template = {
     education: [
       {
         id: uid(),
-        degree: 'BE',
-        field: 'Computer Engineering',
-        school: 'University of Pune',
-        location: 'Pune, India',
-        start: 'Jul 2012',
-        end: 'May 2016',
-        detail: 'First Class with Distinction.',
+        degree: 'B.Tech',
+        field: 'Computer Science and Engineering',
+        school: 'Chandigarh Engineering College',
+        location: '',
+        start: 'Aug 2014',
+        end: 'May 2017',
+        detail: '',
       },
     ],
     skills: [
