@@ -12,7 +12,31 @@ npm run dev      # http://localhost:5180
 npm run build    # static bundle in dist/
 ```
 
-### Docker
+### Make
+
+```bash
+make            # list targets
+make up         # git pull --ff-only, then docker compose up -d --build
+make logs       # follow container logs
+make health     # check the app answers over HTTP
+make down       # stop and remove the container
+make clean      # also drop volumes and the built image
+```
+
+`make up` fast-forwards the checkout first, so a stale clone can never be built. If the
+directory is not a git repo, or the branch has no upstream, the pull is skipped with a
+notice rather than failing the build.
+
+The host port lives in one place and flows from the Makefile into compose:
+
+```bash
+make up ATS_PORT=9000      # http://localhost:9000
+```
+
+GNU Make is not bundled with Windows — `choco install make`, `winget install
+ezwinports.make`, or run the targets from WSL.
+
+### Docker directly
 
 ```bash
 docker compose up -d --build          # http://localhost:8100
