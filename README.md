@@ -15,27 +15,31 @@ npm run build    # static bundle in dist/
 ### Docker
 
 ```bash
-docker compose up -d --build          # http://localhost:8080
+docker compose up -d --build          # http://localhost:8100
 docker compose logs -f app
 docker compose down
 ```
 
-The `Dockerfile` is multistage — `deps` installs from the lockfile, `build` produces
-`dist/`, and `runtime` carries only the built bundle plus `node_modules`, running as the
-non-root `node` user. The bundle is served by Vite's own preview server, which gets the
-SPA fallback and the `application/javascript` type for the pdf.js `.mjs` worker right
-without a separate web server.
+The `Dockerfile` is multistage:
 
-For hot reload against the source tree instead:
+| Stage | Does |
+| --- | --- |
+| `deps` | `npm ci` from the lockfile, in its own layer so source edits do not re-install |
+| `build` | `npm run build` → `dist/` |
+| `runtime` | copies **only** `dist/` and `server.mjs` — no toolchain, no `node_modules` |
 
-```bash
-docker compose --profile dev up dev   # http://localhost:5180
-```
+`server.mjs` is a dependency-free Node static server (~90 lines): correct MIME types
+including the pdf.js `.mjs` worker, immutable caching for hashed `/assets/`, SPA history
+fallback for navigations only — a missing `.js` returns 404 rather than HTML — and path
+resolution confined to the served root.
 
-That service bind-mounts the working directory with an anonymous volume over
-`/app/node_modules`, so the Linux-built dependencies in the image are not shadowed by the
-Windows-built ones on the host. File watching uses polling, since bind-mount events do not
-propagate from a Windows host.
+The container runs as the non-root `node` user with `cap_drop: ALL` and
+`no-new-privileges`, and publishes to `127.0.0.1` only, since resumes are personal data
+and this needs no LAN exposure. Change the host port in `docker-compose.yml` if 8100 is
+taken.
+
+For hot reload during development, run Vite on the host (`npm run dev`) — it is faster
+than a bind-mounted container and needs no polling workaround.
 
 ## What it does
 
