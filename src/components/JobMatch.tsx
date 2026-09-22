@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import type { KeywordHit, ScoreResult } from '../types'
 import { extractJobTitle } from '../lib/keywords'
-import { SAMPLE_JD } from '../lib/sample'
+import { DEFAULT_TEMPLATE } from '../lib/templates'
 
 const GROUPS: { weight: number; label: string; note: string }[] = [
   { weight: 3, label: 'Core requirements', note: 'Repeated in the requirements section — highest ranking weight.' },
@@ -38,7 +38,7 @@ export default function JobMatch({
       </div>
 
       <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
-        <button className="btn btn-sm" onClick={() => onJdChange(SAMPLE_JD)}>
+        <button className="btn btn-sm" onClick={() => onJdChange(DEFAULT_TEMPLATE.jd)}>
           Load sample posting
         </button>
         <button className="btn btn-sm" onClick={() => onJdChange('')} disabled={!jd}>

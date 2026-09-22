@@ -115,9 +115,47 @@ export const SKILL_TAXONOMY: Record<string, string[]> = {
   Git: ['git', 'version control'],
   Linux: ['linux', 'unix', 'ubuntu', 'rhel', 'centos'],
   Networking: ['networking', 'tcp/ip', 'dns', 'load balancing', 'vpc'],
-  Observability: ['observability', 'monitoring', 'prometheus', 'grafana', 'datadog', 'splunk', 'new relic'],
+  // Kept generic: the individual tools below are separate keywords so a posting that
+  // names Prometheus and Grafana does not collapse into one match.
+  Observability: ['observability', 'monitoring', 'monitoring and alerting', 'alerting'],
+  Prometheus: ['prometheus', 'promql', 'alertmanager', 'thanos'],
+  Grafana: ['grafana'],
+  Datadog: ['datadog'],
+  Splunk: ['splunk'],
+  'New Relic': ['new relic', 'newrelic', 'dynatrace', 'appdynamics'],
+  OpenTelemetry: ['opentelemetry', 'otel', 'distributed tracing', 'jaeger', 'zipkin'],
+  'ELK Stack': ['elk', 'elk stack', 'logstash', 'kibana', 'fluentd', 'fluent bit', 'loki'],
   'Site Reliability': ['sre', 'site reliability', 'reliability engineering'],
   Serverless: ['serverless'],
+
+  // DevOps / Cloud / SRE
+  Helm: ['helm', 'helm charts'],
+  'Argo CD': ['argo cd', 'argocd', 'flux', 'fluxcd'],
+  GitOps: ['gitops'],
+  'Service Mesh': ['service mesh', 'istio', 'linkerd', 'envoy'],
+  'HashiCorp Vault': ['vault', 'hashicorp vault', 'secrets management'],
+  Packer: ['packer'],
+  CloudFormation: ['cloudformation', 'cloud formation', 'aws cdk'],
+  Pulumi: ['pulumi'],
+  Terragrunt: ['terragrunt'],
+  Consul: ['consul'],
+  Nomad: ['nomad'],
+  PagerDuty: ['pagerduty', 'opsgenie', 'victorops'],
+  'Incident Response': ['incident response', 'incident management', 'on-call', 'on call', 'incident commander', 'major incident'],
+  'SLOs & Error Budgets': ['slo', 'slos', 'sli', 'slis', 'sla', 'error budget', 'error budgets', 'service level objective', 'service level indicator'],
+  Postmortems: ['postmortem', 'postmortems', 'post-mortem', 'blameless postmortem', 'root cause analysis', 'rca'],
+  'Chaos Engineering': ['chaos engineering', 'chaos testing', 'game day', 'game days', 'fault injection'],
+  'Disaster Recovery': ['disaster recovery', 'business continuity', 'rto', 'rpo', 'failover', 'high availability'],
+  'Capacity Planning': ['capacity planning', 'capacity management', 'performance tuning'],
+  Autoscaling: ['autoscaling', 'auto-scaling', 'auto scaling', 'hpa', 'karpenter', 'cluster autoscaler'],
+  'Progressive Delivery': ['blue-green', 'blue green', 'canary', 'canary deployment', 'canary releases', 'feature flags', 'progressive delivery', 'rolling deployment'],
+  FinOps: ['finops', 'cloud cost optimization', 'cloud cost optimisation', 'cost optimization', 'cost optimisation', 'rightsizing'],
+  'Configuration Management': ['configuration management', 'config management'],
+  'Zero Trust': ['zero trust', 'zero-trust'],
+  eBPF: ['ebpf', 'cilium'],
+  'Load Testing': ['load testing', 'performance testing', 'stress testing', 'k6', 'jmeter', 'locust'],
+  'Platform Engineering': ['platform engineering', 'internal developer platform', 'developer experience', 'backstage'],
+  'Runbooks': ['runbook', 'runbooks', 'playbooks'],
 
   // Security
   Cybersecurity: ['cybersecurity', 'cyber security', 'information security', 'infosec'],
@@ -194,12 +232,16 @@ export const TOOL_SKILLS = new Set([
   'Jira', 'Tableau', 'Power BI', 'Looker', 'Excel', 'Salesforce', 'Docker',
   'Kubernetes', 'Terraform', 'Ansible', 'Jenkins', 'GitHub Actions', 'GitLab',
   'Git', 'Build Tooling', 'Databricks', 'Snowflake', 'Google Analytics',
+  'Helm', 'Argo CD', 'Prometheus', 'Grafana', 'Datadog', 'Splunk', 'New Relic',
+  'OpenTelemetry', 'ELK Stack', 'PagerDuty', 'Packer', 'CloudFormation',
+  'Pulumi', 'Terragrunt', 'Consul', 'Nomad', 'HashiCorp Vault', 'Service Mesh',
 ])
 
 export const CERT_PATTERNS = [
   'pmp', 'cissp', 'cisa', 'cism', 'ceh', 'comptia', 'security+', 'network+',
   'aws certified', 'azure certified', 'google cloud certified', 'cka', 'ckad',
-  'terraform associate', 'scrum master', 'csm', 'psm', 'itil', 'cpa',
+  'cks', 'rhcsa', 'rhce', 'terraform associate', 'vault associate',
+  'scrum master', 'csm', 'psm', 'itil', 'cpa',
   'cfa', 'six sigma', 'prince2', 'shrm', 'phr',
 ]
 
@@ -207,10 +249,10 @@ export const CERT_PATTERNS = [
 export const ACTION_VERBS: Record<string, string[]> = {
   leadership: ['Led', 'Directed', 'Spearheaded', 'Orchestrated', 'Mentored', 'Supervised', 'Coordinated', 'Oversaw', 'Championed'],
   achievement: ['Delivered', 'Achieved', 'Exceeded', 'Surpassed', 'Attained', 'Secured', 'Won', 'Completed'],
-  improvement: ['Improved', 'Optimised', 'Optimized', 'Streamlined', 'Accelerated', 'Reduced', 'Increased', 'Boosted', 'Enhanced', 'Modernised', 'Modernized', 'Refactored', 'Cut', 'Grew'],
-  creation: ['Built', 'Designed', 'Developed', 'Engineered', 'Architected', 'Created', 'Launched', 'Implemented', 'Established', 'Introduced', 'Prototyped'],
-  analysis: ['Analysed', 'Analyzed', 'Evaluated', 'Assessed', 'Investigated', 'Diagnosed', 'Forecasted', 'Modelled', 'Modeled', 'Audited', 'Researched'],
-  operations: ['Automated', 'Migrated', 'Deployed', 'Scaled', 'Maintained', 'Integrated', 'Configured', 'Administered', 'Standardised', 'Standardized', 'Resolved', 'Remediated', 'Owned', 'Drove', 'Managed'],
+  improvement: ['Improved', 'Optimised', 'Optimized', 'Streamlined', 'Accelerated', 'Reduced', 'Increased', 'Boosted', 'Enhanced', 'Modernised', 'Modernized', 'Refactored', 'Cut', 'Grew', 'Halved', 'Doubled', 'Tripled', 'Slashed', 'Tuned', 'Simplified', 'Consolidated', 'Eliminated'],
+  creation: ['Built', 'Rebuilt', 'Designed', 'Redesigned', 'Developed', 'Engineered', 'Architected', 'Rearchitected', 'Created', 'Launched', 'Implemented', 'Established', 'Introduced', 'Prototyped', 'Piloted', 'Instituted', 'Founded'],
+  analysis: ['Analysed', 'Analyzed', 'Evaluated', 'Assessed', 'Investigated', 'Diagnosed', 'Debugged', 'Forecasted', 'Modelled', 'Modeled', 'Audited', 'Researched', 'Benchmarked'],
+  operations: ['Automated', 'Migrated', 'Deployed', 'Scaled', 'Maintained', 'Integrated', 'Instrumented', 'Configured', 'Provisioned', 'Administered', 'Standardised', 'Standardized', 'Resolved', 'Remediated', 'Hardened', 'Patched', 'Replaced', 'Decommissioned', 'Containerised', 'Containerized', 'Restored', 'Recovered', 'Owned', 'Drove', 'Managed', 'Operated', 'Rolled'],
   communication: ['Presented', 'Negotiated', 'Advised', 'Influenced', 'Partnered', 'Facilitated', 'Trained', 'Authored', 'Documented'],
 }
 

@@ -3,7 +3,8 @@ import type { KeywordHit, Recommendation, Resume } from './types'
 import { scoreResume } from './lib/scoring'
 import { groupForKeyword } from './lib/keywords'
 import { SKILL_TAXONOMY } from './lib/vocab'
-import { SAMPLE_JD, SAMPLE_RESUME, emptyResume, uid } from './lib/sample'
+import { emptyResume, uid } from './lib/sample'
+import { DEFAULT_TEMPLATE, TEMPLATES } from './lib/templates'
 import { download, resumeToDocxBlob, resumeToText, safeFilename } from './lib/export'
 import Editor from './components/Editor'
 import Preview from './components/Preview'
@@ -30,8 +31,8 @@ function loadState(): { resume: Resume; jd: string } | null {
 
 export default function App() {
   const saved = useMemo(loadState, [])
-  const [resume, setResume] = useState<Resume>(() => saved?.resume ?? SAMPLE_RESUME)
-  const [jd, setJd] = useState(() => saved?.jd ?? SAMPLE_JD)
+  const [resume, setResume] = useState<Resume>(() => saved?.resume ?? DEFAULT_TEMPLATE.resume)
+  const [jd, setJd] = useState(() => saved?.jd ?? DEFAULT_TEMPLATE.jd)
   const [tab, setTab] = useState<LeftTab>('editor')
   const [highlight, setHighlight] = useState(true)
   const [importing, setImporting] = useState(false)
@@ -206,6 +207,31 @@ export default function App() {
           <input type="checkbox" checked={highlight} onChange={(e) => setHighlight(e.target.checked)} />
           Highlight matches
         </label>
+
+        <select
+          className="btn btn-sm"
+          title="Start from a template (replaces the current resume)"
+          value=""
+          onChange={(e) => {
+            const t = TEMPLATES.find((x) => x.id === e.target.value)
+            if (!t) return
+            if (confirm(`Replace the current resume with the "${t.name}" template?`)) {
+              setResume(t.resume)
+              setJd(t.jd)
+              flash(`Loaded the ${t.name} template.`)
+            }
+            e.target.value = ''
+          }}
+        >
+          <option value="" disabled>
+            Templates
+          </option>
+          {TEMPLATES.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
 
         <button className="btn btn-sm" onClick={() => setImporting(true)}>
           Import resume

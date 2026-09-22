@@ -65,6 +65,25 @@ taken.
 For hot reload during development, run Vite on the host (`npm run dev`) — it is faster
 than a bind-mounted container and needs no polling workaround.
 
+## Templates
+
+The app opens on a **Senior DevOps / Cloud / SRE** template with a matching job posting
+loaded, so the scoring, keyword gap analysis and exports all have something real to work
+on from the first second. Pick another from the **Templates** dropdown in the toolbar, or
+**New** for a blank document.
+
+The default template is written to demonstrate what scores well — every bullet opens with
+an achievement verb, all of them carry a metric with a before/after, and the skills are
+grouped the way recruiters search (`Cloud & Infrastructure`, `Containers &
+Orchestration`, `CI/CD & Automation`, `Reliability & Observability`, `Security &
+Governance`, `Core Competencies`). It scores 100/100 against its paired posting; replace
+the content with your own and the score moves to reflect it.
+
+| Template | For |
+| --- | --- |
+| Senior DevOps / Cloud / SRE | Platform, reliability and cloud infrastructure roles |
+| Senior Data Engineer | Data platform, pipeline and analytics engineering roles |
+
 ## What it does
 
 **Three panes, always in sync.** Editor (or job-match) on the left, an ATS-safe live
