@@ -1,0 +1,22 @@
+services:
+  # Production bundle, served by Vite's preview server.  http://localhost:8100
+  app:
+    build:
+      context: .
+      target: runtime
+    image: ats-resume-pro:latest
+    container_name: ats-resume-pro
+    # Loopback only: resumes are personal data and this needs no LAN exposure.
+    ports:
+      - "127.0.0.1:8100:8080"
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
