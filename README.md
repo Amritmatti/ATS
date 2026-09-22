@@ -117,9 +117,20 @@ does it, the structure is rebuilt into editable fields, and you get the warnings
 ATS would hit: multi-column layouts, image-only PDFs, tables, unrecognised headings, page
 count. The raw extracted text is shown so you can see what the machine actually reads.
 
+**Font size.** The stepper above the preview resizes the whole document proportionally
+from 9.0pt to 13.3pt (default 10.6pt) — click the value to reset. Everything inside the
+page is sized in `em` off one `--paper-scale`, so headings, dates and body text stay in
+proportion. The setting flows through to the page estimate, the `.docx` export and print.
+
 **Exports.** `.docx` (single column, standard headings, no tables or text boxes),
 plain `.txt`, browser Print → PDF from a dedicated print stylesheet, and a `.json`
-project file that round-trips the resume and the job description.
+project file that round-trips the resume, the job description and the font size.
+
+**Clean printing.** The print stylesheet sets `@page { margin: 0 }` and moves the page
+margin onto the content, which leaves the browser no margin box to draw its own header
+and footer into — so the printout carries no URL, date or page title. The document title
+is also swapped for the resume filename while printing, so Chrome's "Save as PDF" names
+the file after the candidate rather than after this app.
 
 ## Layout
 

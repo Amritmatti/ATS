@@ -17,13 +17,27 @@ const STORAGE_KEY = 'ats-resume-pro:v1'
 
 type LeftTab = 'editor' | 'job'
 
-function loadState(): { resume: Resume; jd: string } | null {
+/** Base print size in points; the stepper multiplies it. */
+const BASE_PT = 10.6
+const MIN_SCALE = 0.85
+const MAX_SCALE = 1.25
+const SCALE_STEP = 0.05
+
+function clampScale(n: number): number {
+  return Math.min(MAX_SCALE, Math.max(MIN_SCALE, Math.round(n * 100) / 100))
+}
+
+function loadState(): { resume: Resume; jd: string; fontScale: number } | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw)
     if (!parsed?.resume?.contact) return null
-    return { resume: parsed.resume as Resume, jd: parsed.jd ?? '' }
+    return {
+      resume: parsed.resume as Resume,
+      jd: parsed.jd ?? '',
+      fontScale: clampScale(Number(parsed.fontScale) || 1),
+    }
   } catch {
     return null
   }
@@ -33,6 +47,7 @@ export default function App() {
   const saved = useMemo(loadState, [])
   const [resume, setResume] = useState<Resume>(() => saved?.resume ?? DEFAULT_TEMPLATE.resume)
   const [jd, setJd] = useState(() => saved?.jd ?? DEFAULT_TEMPLATE.jd)
+  const [fontScale, setFontScale] = useState(() => saved?.fontScale ?? 1)
   const [tab, setTab] = useState<LeftTab>('editor')
   const [highlight, setHighlight] = useState(true)
   const [importing, setImporting] = useState(false)
@@ -51,13 +66,33 @@ export default function App() {
   useEffect(() => {
     const t = window.setTimeout(() => {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ resume, jd }))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ resume, jd, fontScale }))
       } catch {
         /* quota or private mode — autosave is a convenience, not a requirement */
       }
     }, 400)
     return () => window.clearTimeout(t)
-  }, [resume, jd])
+  }, [resume, jd, fontScale])
+
+  // Chrome names a saved PDF after document.title and, when the user leaves headers
+  // enabled, prints it at the top of the page. Swapping it for the resume filename means
+  // neither place says "ATS Resume Pro".
+  useEffect(() => {
+    const appTitle = 'ATS Resume Pro'
+    const onBefore = () => {
+      document.title = safeFilename(resume, '')
+    }
+    const onAfter = () => {
+      document.title = appTitle
+    }
+    window.addEventListener('beforeprint', onBefore)
+    window.addEventListener('afterprint', onAfter)
+    return () => {
+      window.removeEventListener('beforeprint', onBefore)
+      window.removeEventListener('afterprint', onAfter)
+      document.title = appTitle
+    }
+  }, [resume])
 
   const flash = useCallback((msg: string) => {
     setToast(msg)
@@ -73,7 +108,7 @@ export default function App() {
     })
   }, [])
 
-  const score = useMemo(() => scoreResume(resume, jd), [resume, jd])
+  const score = useMemo(() => scoreResume(resume, jd, fontScale), [resume, jd, fontScale])
 
   /* ---------------------------------------------------------------- keyword helpers */
 
@@ -142,7 +177,7 @@ export default function App() {
   const exportDocx = async () => {
     setBusy(true)
     try {
-      const blob = await resumeToDocxBlob(resume)
+      const blob = await resumeToDocxBlob(resume, fontScale)
       download(blob, safeFilename(resume, '.docx'))
       flash('Word file downloaded.')
     } catch (e: any) {
@@ -159,7 +194,7 @@ export default function App() {
 
   const exportJson = () => {
     download(
-      new Blob([JSON.stringify({ resume, jd }, null, 2)], { type: 'application/json' }),
+      new Blob([JSON.stringify({ resume, jd, fontScale }, null, 2)], { type: 'application/json' }),
       safeFilename(resume, '.json'),
     )
     flash('Project file saved.')
@@ -172,6 +207,7 @@ export default function App() {
         if (data?.resume?.contact) {
           setResume(data.resume)
           setJd(data.jd ?? '')
+          setFontScale(clampScale(Number(data.fontScale) || 1))
           flash('Project loaded.')
         } else flash('That JSON is not an ATS Resume Pro project file.')
       } catch {
@@ -302,11 +338,41 @@ export default function App() {
           <div className="pane-head">
             <h2>ATS-safe preview</h2>
             <div style={{ flex: 1 }} />
+
+            <div className="font-step" role="group" aria-label="Resume font size">
+              <button
+                onClick={() => setFontScale((s) => clampScale(s - SCALE_STEP))}
+                disabled={fontScale <= MIN_SCALE}
+                title="Decrease font size"
+                aria-label="Decrease font size"
+              >
+                A&minus;
+              </button>
+              <span
+                className="val"
+                role="button"
+                tabIndex={0}
+                title="Reset to the default 10.6 pt"
+                onClick={() => setFontScale(1)}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setFontScale(1)}
+              >
+                {(BASE_PT * fontScale).toFixed(1)} pt
+              </span>
+              <button
+                onClick={() => setFontScale((s) => clampScale(s + SCALE_STEP))}
+                disabled={fontScale >= MAX_SCALE}
+                title="Increase font size"
+                aria-label="Increase font size"
+              >
+                A+
+              </button>
+            </div>
+
             <span style={{ fontSize: 11.5, color: 'var(--text-3)' }}>
               ~{score.stats.pages} page{score.stats.pages === 1 ? '' : 's'} · {score.stats.words} words
             </span>
           </div>
-          <Preview resume={resume} keywords={score.keywords} highlight={highlight} pageBreakAt={null} />
+          <Preview resume={resume} keywords={score.keywords} highlight={highlight} fontScale={fontScale} />
         </div>
 
         <div className="pane">

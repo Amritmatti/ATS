@@ -102,7 +102,7 @@ function sev(ratio: number): Severity {
   return 'critical'
 }
 
-export function scoreResume(resume: Resume, jobDescription: string): ScoreResult {
+export function scoreResume(resume: Resume, jobDescription: string, fontScale = 1): ScoreResult {
   const recs: Recommendation[] = []
   const bullets = analyseBullets(resume)
   const words = countWords(resume)
@@ -542,7 +542,7 @@ export function scoreResume(resume: Resume, jobDescription: string): ScoreResult
 
   /* ---------------------------------------------------------------- 5. FORMAT & LENGTH (10) */
   let format = 0
-  const pages = estimatePages(resume)
+  const pages = estimatePages(resume, fontScale)
 
   if (words >= 400 && words <= 900) format += 3
   else {
@@ -670,22 +670,35 @@ export function scoreResume(resume: Resume, jobDescription: string): ScoreResult
   }
 }
 
-export function estimatePages(resume: Resume): number {
-  // Rough line model matching the preview template at 10.5pt / A4.
+/**
+ * Rough line model matching the preview template at 10.6pt on A4.
+ * `scale` is the font-size multiplier: bigger type fits fewer characters per line
+ * and fewer lines per page, so capacity falls off on both axes.
+ */
+export function estimatePages(resume: Resume, scale = 1): number {
+  const perLine = 105 / scale
+  const perPage = 48 / scale
+
+  // Rounding each block up to a whole line made the total insensitive to font size,
+  // so wrapped text is measured fractionally with a half-line allowance for the
+  // ragged last line of each block.
+  const wrapped = (chars: number, width = perLine) => (chars > 0 ? chars / width + 0.5 : 0)
+
   let lines = 6 // header block
-  if (resume.summary.trim()) lines += 3 + Math.ceil(resume.summary.length / 110)
+  if (resume.summary.trim()) lines += 2 + wrapped(resume.summary.length, 110 / scale)
   for (const e of resume.experience) {
     lines += 3
-    for (const b of e.bullets) lines += Math.max(1, Math.ceil(b.text.length / 105))
+    for (const b of e.bullets) lines += wrapped(b.text.trim().length)
   }
   for (const p of resume.projects) {
     lines += 2
-    for (const b of p.bullets) lines += Math.max(1, Math.ceil(b.text.length / 105))
+    for (const b of p.bullets) lines += wrapped(b.text.trim().length)
   }
-  if (resume.skills.length) lines += 2 + resume.skills.reduce((s, g) => s + Math.max(1, Math.ceil(g.items.join(', ').length / 95)), 0)
+  if (resume.skills.length)
+    lines += 2 + resume.skills.reduce((s, g) => s + wrapped(g.items.join(', ').length, 95 / scale), 0)
   if (resume.education.length) lines += 2 + resume.education.length * 2
-  if (resume.certifications.length) lines += 2 + resume.certifications.length
-  return Math.max(1, Math.ceil(lines / 48))
+  if (resume.certifications.length) lines += 2 + resume.certifications.reduce((s, c) => s + wrapped(c.name.length + c.issuer.length + 12), 0)
+  return Math.max(1, Math.ceil(lines / perPage))
 }
 
 function severityRank(s: Severity): number {

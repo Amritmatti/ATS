@@ -34,12 +34,12 @@ export default function Preview({
   resume: r,
   keywords,
   highlight,
-  pageBreakAt,
+  fontScale,
 }: {
   resume: Resume
   keywords: KeywordHit[]
   highlight: boolean
-  pageBreakAt: number | null
+  fontScale: number
 }) {
   const re = useMemo(() => buildHighlighter(keywords, highlight), [keywords, highlight])
   const contactLine = [r.contact.location, r.contact.phone, r.contact.email, r.contact.linkedin, r.contact.website]
@@ -50,7 +50,7 @@ export default function Preview({
 
   return (
     <div className="paper-wrap">
-      <div className="paper" style={pageBreakAt ? { position: 'relative' } : undefined}>
+      <div className="paper" style={{ '--paper-scale': fontScale } as React.CSSProperties}>
         <h1>{r.contact.fullName || <span className="p-empty">Your Name</span>}</h1>
         {r.contact.headline && <div className="p-headline">{r.contact.headline}</div>}
         <div className="p-contact">{contactLine || <span className="p-empty">email  |  phone  |  city</span>}</div>

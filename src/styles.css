@@ -265,23 +265,25 @@ textarea { resize: vertical; line-height: 1.55; }
 /* ------------------------------------------------------------------ resume paper */
 
 .paper-wrap { background: var(--bg); padding: 18px; display: flex; justify-content: center; }
+/* Everything inside .paper is sized in em so one --paper-scale resizes the whole
+   document proportionally, on screen and in print. */
 .paper {
   background: #fff; color: #111; width: 100%; max-width: 760px;
   padding: 44px 48px; box-shadow: var(--shadow); border-radius: 4px;
   font-family: "Calibri", "Carlito", Arial, Helvetica, sans-serif;
-  font-size: 13.2px; line-height: 1.45;
+  font-size: calc(13.2px * var(--paper-scale, 1)); line-height: 1.45;
 }
-.paper h1 { font-size: 24px; margin: 0 0 2px; text-align: center; letter-spacing: -0.01em; }
-.paper .p-headline { text-align: center; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-.paper .p-contact { text-align: center; font-size: 12.2px; color: #333; margin-bottom: 16px; }
+.paper h1 { font-size: 1.82em; margin: 0 0 2px; text-align: center; letter-spacing: -0.01em; }
+.paper .p-headline { text-align: center; font-weight: 600; font-size: 1.06em; margin-bottom: 4px; }
+.paper .p-contact { text-align: center; font-size: 0.93em; color: #333; margin-bottom: 1.2em; }
 .paper h2 {
-  font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.08em;
-  border-bottom: 1px solid #b9b9b9; padding-bottom: 3px; margin: 16px 0 8px;
+  font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid #b9b9b9; padding-bottom: 3px; margin: 1.2em 0 0.6em;
 }
-.paper .p-role { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-top: 10px; }
-.paper .p-role strong { font-size: 13.6px; }
-.paper .p-role .p-dates { font-size: 12.2px; color: #444; white-space: nowrap; }
-.paper .p-sub { font-size: 12.4px; color: #444; }
+.paper .p-role { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-top: 0.75em; }
+.paper .p-role strong { font-size: 1.03em; }
+.paper .p-role .p-dates { font-size: 0.93em; color: #444; white-space: nowrap; }
+.paper .p-sub { font-size: 0.94em; color: #444; }
 .paper ul { margin: 4px 0 0; padding-left: 18px; }
 .paper li { margin-bottom: 3px; }
 .paper .p-skill-line { margin-bottom: 4px; }
@@ -338,13 +340,21 @@ textarea { resize: vertical; line-height: 1.55; }
 /* ------------------------------------------------------------------ print */
 
 @media print {
-  @page { size: A4; margin: 12mm; }
+  /* Zero page margins leave the browser no margin box to draw its own header and
+     footer into, which is what removes the URL, the date and the page title from
+     the printout. The visual margin comes from .paper padding instead. */
+  @page { size: A4; margin: 0; }
   body { background: #fff; }
   .topbar, .pane-head, .app > .main > .pane:not(.print-pane), .toast, .modal-backdrop { display: none !important; }
   .main { display: block !important; }
   .pane.print-pane { overflow: visible !important; border: none !important; }
   .paper-wrap { padding: 0 !important; background: #fff !important; }
-  .paper { box-shadow: none !important; max-width: none !important; padding: 0 !important; font-size: 10.6pt; }
+  .paper {
+    box-shadow: none !important;
+    max-width: none !important;
+    padding: 13mm 14mm !important;
+    font-size: calc(10.6pt * var(--paper-scale, 1));
+  }
   .page-guide::after { display: none; }
   .paper mark { background: none; }
 }
@@ -353,3 +363,22 @@ textarea { resize: vertical; line-height: 1.55; }
   .main, .main.two-col { grid-template-columns: 1fr; grid-auto-rows: minmax(400px, auto); }
   .pane { border-right: none; border-bottom: 1px solid var(--border); }
 }
+
+/* ------------------------------------------------------------------ font size stepper */
+
+.font-step { display: flex; align-items: center; gap: 1px; }
+.font-step button {
+  border: 1px solid var(--border-strong); background: var(--surface);
+  cursor: pointer; padding: 3px 8px; font-size: 12px; line-height: 1.3;
+}
+.font-step button:first-child { border-radius: 7px 0 0 7px; }
+.font-step button:last-child { border-radius: 0 7px 7px 0; }
+.font-step button:hover:not(:disabled) { background: var(--surface-2); }
+.font-step button:disabled { opacity: 0.4; cursor: not-allowed; }
+.font-step .val {
+  border-top: 1px solid var(--border-strong); border-bottom: 1px solid var(--border-strong);
+  background: var(--surface); padding: 3px 7px; font-size: 11.5px;
+  font-variant-numeric: tabular-nums; min-width: 52px; text-align: center;
+  cursor: pointer; color: var(--text-2);
+}
+.font-step .val:hover { background: var(--surface-2); color: var(--text); }

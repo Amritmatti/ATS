@@ -69,7 +69,7 @@ export function resumeToText(r: Resume): string {
 
 /* ------------------------------------------------------------------ Word (.docx) */
 
-export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
+export async function resumeToDocxBlob(r: Resume, fontScale = 1): Promise<Blob> {
   const {
     AlignmentType,
     BorderStyle,
@@ -80,25 +80,27 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
   } = await import('docx')
 
   const FONT = 'Calibri'
+  // docx sizes are half-points; scale them so the Word file matches the preview.
+  const sz = (n: number) => Math.max(12, Math.round(n * fontScale))
   const body = (text: string, opts: { bold?: boolean; size?: number; align?: any; spacing?: any } = {}) =>
     new Paragraph({
       alignment: opts.align,
       spacing: opts.spacing ?? { after: 40 },
-      children: [new TextRun({ text, bold: opts.bold, font: FONT, size: opts.size ?? 21 })],
+      children: [new TextRun({ text, bold: opts.bold, font: FONT, size: sz(opts.size ?? 21) })],
     })
 
   const sectionHeading = (text: string) =>
     new Paragraph({
       spacing: { before: 220, after: 90 },
       border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '999999', space: 2 } },
-      children: [new TextRun({ text: text.toUpperCase(), bold: true, font: FONT, size: 22, color: '1a1a1a' })],
+      children: [new TextRun({ text: text.toUpperCase(), bold: true, font: FONT, size: sz(22), color: '1a1a1a' })],
     })
 
   const bullet = (text: string) =>
     new Paragraph({
       bullet: { level: 0 },
       spacing: { after: 60 },
-      children: [new TextRun({ text, font: FONT, size: 21 })],
+      children: [new TextRun({ text, font: FONT, size: sz(21) })],
     })
 
   const children: any[] = []
@@ -107,7 +109,7 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 40 },
-      children: [new TextRun({ text: r.contact.fullName, bold: true, font: FONT, size: 32 })],
+      children: [new TextRun({ text: r.contact.fullName, bold: true, font: FONT, size: sz(32) })],
     }),
   )
   if (r.contact.headline)
@@ -133,8 +135,8 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
         new Paragraph({
           spacing: { before: 120, after: 0 },
           children: [
-            new TextRun({ text: e.title, bold: true, font: FONT, size: 22 }),
-            new TextRun({ text: e.company ? `, ${e.company}` : '', font: FONT, size: 22 }),
+            new TextRun({ text: e.title, bold: true, font: FONT, size: sz(22) }),
+            new TextRun({ text: e.company ? `, ${e.company}` : '', font: FONT, size: sz(22) }),
           ],
         }),
       )
@@ -156,8 +158,8 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
         new Paragraph({
           spacing: { after: 60 },
           children: [
-            new TextRun({ text: `${g.label}: `, bold: true, font: FONT, size: 21 }),
-            new TextRun({ text: g.items.join(', '), font: FONT, size: 21 }),
+            new TextRun({ text: `${g.label}: `, bold: true, font: FONT, size: sz(21) }),
+            new TextRun({ text: g.items.join(', '), font: FONT, size: sz(21) }),
           ],
         }),
       )
@@ -171,8 +173,8 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
         new Paragraph({
           spacing: { before: 120, after: 0 },
           children: [
-            new TextRun({ text: p.name, bold: true, font: FONT, size: 22 }),
-            new TextRun({ text: [p.role, p.link].filter(Boolean).length ? ` | ${[p.role, p.link].filter(Boolean).join(' | ')}` : '', font: FONT, size: 20 }),
+            new TextRun({ text: p.name, bold: true, font: FONT, size: sz(22) }),
+            new TextRun({ text: [p.role, p.link].filter(Boolean).length ? ` | ${[p.role, p.link].filter(Boolean).join(' | ')}` : '', font: FONT, size: sz(20) }),
           ],
         }),
       )
@@ -187,7 +189,7 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
         new Paragraph({
           spacing: { before: 100, after: 0 },
           children: [
-            new TextRun({ text: [[e.degree, e.field].filter(Boolean).join(' '), e.school].filter(Boolean).join(', '), bold: true, font: FONT, size: 21 }),
+            new TextRun({ text: [[e.degree, e.field].filter(Boolean).join(' '), e.school].filter(Boolean).join(', '), bold: true, font: FONT, size: sz(21) }),
           ],
         }),
       )
@@ -204,7 +206,7 @@ export async function resumeToDocxBlob(r: Resume): Promise<Blob> {
   }
 
   const doc = new Document({
-    styles: { default: { document: { run: { font: FONT, size: 21 } } } },
+    styles: { default: { document: { run: { font: FONT, size: sz(21) } } } },
     sections: [
       {
         properties: { page: { margin: { top: 720, bottom: 720, left: 720, right: 720 } } },
