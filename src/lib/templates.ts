@@ -51,6 +51,9 @@ const SRE: Template = {
           { id: uid(), text: 'Drove a FinOps programme across 6 teams that cut AWS spend 31% ($1.4M annually) through rightsizing, Karpenter autoscaling and savings plans.' },
           { id: uid(), text: 'Led incident command for a 60-engineer org, lifting blameless postmortem completion from 45% to 98% within two quarters.' },
           { id: uid(), text: 'Rebuilt the multi-region disaster recovery posture to a 15-minute RTO, proven by quarterly failover game days.' },
+          { id: uid(), text: 'Implemented end-to-end MLOps practices covering model training, deployment, versioning, monitoring and drift detection for 18 production models, cutting retraining turnaround from 3 weeks to 2 days.' },
+          { id: uid(), text: 'Built ML workflows on AWS SageMaker for training and inference, reducing model deployment lead time from 5 days to 4 hours.' },
+          { id: uid(), text: 'Automated orchestration with Airflow, AWS Step Functions and Kubeflow, replacing 40+ manual handoffs and cutting pipeline failures 64%.' },
         ],
       },
       {
@@ -99,6 +102,7 @@ const SRE: Template = {
       { id: uid(), label: 'Containers & Orchestration', items: ['Kubernetes', 'Docker', 'Helm', 'Argo CD', 'GitOps', 'Service Mesh', 'Autoscaling'] },
       { id: uid(), label: 'CI/CD & Automation', items: ['CI/CD', 'GitLab', 'GitHub Actions', 'Jenkins', 'Python', 'Bash', 'Go', 'Git', 'Progressive Delivery', 'Platform Engineering'] },
       { id: uid(), label: 'Reliability & Observability', items: ['Site Reliability', 'Prometheus', 'Grafana', 'OpenTelemetry', 'Datadog', 'SLOs & Error Budgets', 'Incident Response', 'Postmortems', 'Chaos Engineering', 'Disaster Recovery', 'Capacity Planning'] },
+      { id: uid(), label: 'MLOps & ML Platform', items: ['MLOps', 'AWS SageMaker', 'Kubeflow', 'Step Functions', 'Airflow', 'Model Training', 'Model Deployment', 'Model Versioning', 'Model Monitoring', 'Machine Learning'] },
       { id: uid(), label: 'Security & Governance', items: ['IAM', 'HashiCorp Vault', 'Zero Trust', 'Compliance', 'Risk Management', 'FinOps'] },
       { id: uid(), label: 'Core Competencies', items: ['Communication', 'Stakeholder Management', 'Mentoring', 'Cross-functional Collaboration'] },
     ],

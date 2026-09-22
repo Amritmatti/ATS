@@ -96,7 +96,17 @@ export const SKILL_TAXONOMY: Record<string, string[]> = {
   PyTorch: ['pytorch'],
   'scikit-learn': ['scikit-learn', 'sklearn', 'scikit learn'],
   'LLMs': ['llm', 'llms', 'large language model', 'large language models', 'genai', 'generative ai'],
-  MLOps: ['mlops'],
+  MLOps: ['mlops', 'ml ops', 'ml engineering'],
+  'AWS SageMaker': ['sagemaker', 'aws sagemaker', 'amazon sagemaker'],
+  Kubeflow: ['kubeflow', 'kubeflow pipelines'],
+  'Step Functions': ['step functions', 'aws step functions'],
+  MLflow: ['mlflow', 'weights and biases', 'wandb'],
+  'Model Training': ['model training', 'model retraining', 'hyperparameter tuning'],
+  'Model Deployment': ['model deployment', 'model serving', 'inference endpoint', 'batch inference', 'real-time inference'],
+  'Model Monitoring': ['model monitoring', 'drift detection', 'model drift', 'data drift', 'concept drift', 'model observability'],
+  'Model Versioning': ['model versioning', 'model registry', 'experiment tracking', 'model lineage'],
+  'Feature Store': ['feature store', 'feature engineering', 'feature pipeline'],
+  'Vertex AI': ['vertex ai', 'azure ml', 'azure machine learning'],
   'A/B Testing': ['a/b testing', 'ab testing', 'split testing', 'experimentation'],
   Statistics: ['statistics', 'statistical analysis', 'statistical modeling'],
 
@@ -235,6 +245,7 @@ export const TOOL_SKILLS = new Set([
   'Helm', 'Argo CD', 'Prometheus', 'Grafana', 'Datadog', 'Splunk', 'New Relic',
   'OpenTelemetry', 'ELK Stack', 'PagerDuty', 'Packer', 'CloudFormation',
   'Pulumi', 'Terragrunt', 'Consul', 'Nomad', 'HashiCorp Vault', 'Service Mesh',
+  'AWS SageMaker', 'Kubeflow', 'Step Functions', 'MLflow', 'Vertex AI', 'Airflow',
 ])
 
 export const CERT_PATTERNS = [
